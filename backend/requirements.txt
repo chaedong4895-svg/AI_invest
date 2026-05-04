@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+pydantic-settings
+python-dotenv
+openai
+yfinance
+feedparser
+httpx
+apscheduler
+python-telegram-bot
+sendgrid
+pandas
+numpy

@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+pydantic
+pydantic-settings
+python-dotenv
+openai
+yfinance
+feedparser
+httpx
+apscheduler
+python-telegram-bot
+sendgrid
+pandas
+numpy
