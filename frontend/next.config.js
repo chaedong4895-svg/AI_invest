@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
   async rewrites() {
     return [
@@ -10,10 +11,5 @@ const nextConfig = {
     ];
   },
 };
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'standalone',
-}
 
 module.exports = nextConfig
