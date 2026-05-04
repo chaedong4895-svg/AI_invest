@@ -7,7 +7,8 @@ import StockCard from "@/components/StockCard";
 import SectorBar from "@/components/SectorBar";
 import type { RiskLevel } from "@/types";
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function DashboardPage({
   searchParams,
