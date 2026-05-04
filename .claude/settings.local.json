@@ -13,7 +13,17 @@
       "PowerShell(netstat *)",
       "PowerShell($key = \\(Get-Content C:\\\\Users\\\\ChaeDong\\\\OneDrive\\\\Vive_coding\\\\AI_invest\\\\.env | Select-String \"ADMIN_SECRET_KEY\" | ForEach-Object { \\($_ -replace \"ADMIN_SECRET_KEY=\",\"\"\\).Trim\\(\\) }\\); $h = @{\"x-admin-key\"=$key}; Write-Output \"Sending US report...\"; $r = Invoke-WebRequest -Uri \"http://localhost:8001/api/v1/admin/notify?market=us\" -Method POST -Headers $h -UseBasicParsing; $r.Content | ConvertFrom-Json | ConvertTo-Json)",
       "PowerShell($key = \\(Get-Content C:\\\\Users\\\\ChaeDong\\\\OneDrive\\\\Vive_coding\\\\AI_invest\\\\.env | Select-String \"ADMIN_SECRET_KEY\" | ForEach-Object { \\($_ -replace \"ADMIN_SECRET_KEY=\",\"\"\\).Trim\\(\\) }\\); $h = @{\"x-admin-key\"=$key}; Write-Output \"Sending KR report...\"; $r = Invoke-WebRequest -Uri \"http://localhost:8001/api/v1/admin/notify?market=kr\" -Method POST -Headers $h -UseBasicParsing; $r.Content | ConvertFrom-Json | ConvertTo-Json)",
-      "PowerShell(Get-ChildItem C:\\\\Users\\\\ChaeDong\\\\OneDrive\\\\Vive_coding\\\\AI_invest -Force | Where-Object { $_.Name -notmatch \"^__pycache__|\\\\.pyc$\" } | Select-Object Name, Attributes)"
+      "PowerShell(Get-ChildItem C:\\\\Users\\\\ChaeDong\\\\OneDrive\\\\Vive_coding\\\\AI_invest -Force | Where-Object { $_.Name -notmatch \"^__pycache__|\\\\.pyc$\" } | Select-Object Name, Attributes)",
+      "PowerShell(npm install *)",
+      "PowerShell(railway *)",
+      "PowerShell(railway whoami *)",
+      "PowerShell($token = \"9beee1fb-54e1-4a8a-896b-697d643243fa\"; $body = '{\"query\":\"{ me { name email } }\"}'; $r = Invoke-WebRequest -Uri \"https://backboard.railway.app/graphql/v2\" -Method POST -Headers @{\"Authorization\"=\"Bearer $token\"; \"Content-Type\"=\"application/json\"} -Body $body -UseBasicParsing; $r.Content | ConvertFrom-Json | ConvertTo-Json -Depth 4)",
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell($r = Invoke-WebRequest -Uri \"https://api.github.com/repos/railwayapp/cliv3/releases/latest\" -UseBasicParsing -Headers @{\"User-Agent\"=\"curl\"}; $release = $r.Content | ConvertFrom-Json; $asset = $release.assets | Where-Object { $_.name -match \"windows\" -and $_.name -match \"x86_64\" }; \"Asset: $\\($asset.name\\)\"; \"URL: $\\($asset.browser_download_url\\)\")",
+      "PowerShell(Expand-Archive *)",
+      "PowerShell($env:RAILWAY_TOKEN=\"9beee1fb-54e1-4a8a-896b-697d643243fa\"; & \"$env:USERPROFILE\\\\rlwy.exe\" whoami)",
+      "PowerShell(& \"$env:USERPROFILE\\\\rlwy.exe\" whoami)"
     ]
   }
 }
