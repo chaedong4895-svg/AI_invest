@@ -20,13 +20,20 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
 
     # KST 기준 스케줄 (UTC로 변환: KST - 9h)
+    # US: 미국 마감 후 KST 06:05 / KST 07:00
     schedule_collect_hour_utc: int = 21   # KST 06:05
     schedule_collect_minute_utc: int = 5
     schedule_notify_hour_utc: int = 22    # KST 07:00
     schedule_notify_minute_utc: int = 0
+    # KR: KOSPI 마감(KST 15:30) 후 KST 16:05 / KST 17:00
+    schedule_kr_collect_hour_utc: int = 7    # KST 16:05
+    schedule_kr_collect_minute_utc: int = 5
+    schedule_kr_notify_hour_utc: int = 8     # KST 17:00
+    schedule_kr_notify_minute_utc: int = 0
 
     class Config:
         env_file = ".env"
+        extra = "ignore"
 
 
 @lru_cache()

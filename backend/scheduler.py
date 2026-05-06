@@ -14,29 +14,29 @@ settings = get_settings()
 scheduler = AsyncIOScheduler(timezone="UTC")
 
 
-def _run_pipeline_job():
+def _run_pipeline_job(market: str = "us"):
     from .services.report_generator import run_pipeline
     db = SessionLocal()
     try:
-        logger.info("[Scheduler] collect_and_generate triggered")
-        run_pipeline(db, date.today())
+        logger.info(f"[Scheduler] collect_and_generate triggered market={market}")
+        run_pipeline(db, date.today(), market=market)
     except Exception as e:
-        logger.error(f"[Scheduler] Pipeline failed: {e}", exc_info=True)
-        _notify_admin(f"[오류] 리포트 생성 실패: {e}")
+        logger.error(f"[Scheduler] Pipeline failed market={market}: {e}", exc_info=True)
+        _notify_admin(f"[오류] 리포트 생성 실패({market}): {e}")
     finally:
         db.close()
 
 
-async def _send_notifications_job():
+async def _send_notifications_job(market: str = "us"):
     from .notifier import send_notifications
     db = SessionLocal()
     try:
-        logger.info("[Scheduler] send_notifications triggered")
-        sent = await send_notifications(db, date.today())
-        logger.info(f"[Scheduler] Sent {sent} notifications")
+        logger.info(f"[Scheduler] send_notifications triggered market={market}")
+        sent = await send_notifications(db, date.today(), market=market)
+        logger.info(f"[Scheduler] Sent {sent} notifications market={market}")
     except Exception as e:
-        logger.error(f"[Scheduler] Notify failed: {e}", exc_info=True)
-        _notify_admin(f"[오류] 알림 발송 실패: {e}")
+        logger.error(f"[Scheduler] Notify failed market={market}: {e}", exc_info=True)
+        _notify_admin(f"[오류] 알림 발송 실패({market}): {e}")
     finally:
         db.close()
 
@@ -67,7 +67,7 @@ def _notify_admin(message: str):
 
 
 def start_scheduler():
-    # KST 06:05 = UTC 21:05 전날
+    # US: KST 06:05 = UTC 21:05 전날
     scheduler.add_job(
         _run_pipeline_job,
         CronTrigger(
@@ -75,11 +75,12 @@ def start_scheduler():
             minute=settings.schedule_collect_minute_utc,
             timezone="UTC",
         ),
-        id="collect_and_generate",
+        id="collect_and_generate_us",
         replace_existing=True,
+        kwargs={"market": "us"},
     )
 
-    # KST 07:00 = UTC 22:00 전날
+    # US: KST 07:00 = UTC 22:00 전날
     scheduler.add_job(
         _send_notifications_job,
         CronTrigger(
@@ -87,8 +88,35 @@ def start_scheduler():
             minute=settings.schedule_notify_minute_utc,
             timezone="UTC",
         ),
-        id="send_notifications",
+        id="send_notifications_us",
         replace_existing=True,
+        kwargs={"market": "us"},
+    )
+
+    # KR: KST 16:05 = UTC 07:05
+    scheduler.add_job(
+        _run_pipeline_job,
+        CronTrigger(
+            hour=settings.schedule_kr_collect_hour_utc,
+            minute=settings.schedule_kr_collect_minute_utc,
+            timezone="UTC",
+        ),
+        id="collect_and_generate_kr",
+        replace_existing=True,
+        kwargs={"market": "kr"},
+    )
+
+    # KR: KST 17:00 = UTC 08:00
+    scheduler.add_job(
+        _send_notifications_job,
+        CronTrigger(
+            hour=settings.schedule_kr_notify_hour_utc,
+            minute=settings.schedule_kr_notify_minute_utc,
+            timezone="UTC",
+        ),
+        id="send_notifications_kr",
+        replace_existing=True,
+        kwargs={"market": "kr"},
     )
 
     # 매시 정각 헬스체크
@@ -100,9 +128,13 @@ def start_scheduler():
     )
 
     scheduler.start()
-    logger.info("[Scheduler] Started — collect@UTC %02d:%02d, notify@UTC %02d:%02d" % (
-        settings.schedule_collect_hour_utc,
-        settings.schedule_collect_minute_utc,
-        settings.schedule_notify_hour_utc,
-        settings.schedule_notify_minute_utc,
-    ))
+    logger.info(
+        "[Scheduler] Started — "
+        "US collect@UTC %02d:%02d, US notify@UTC %02d:%02d | "
+        "KR collect@UTC %02d:%02d, KR notify@UTC %02d:%02d" % (
+            settings.schedule_collect_hour_utc, settings.schedule_collect_minute_utc,
+            settings.schedule_notify_hour_utc, settings.schedule_notify_minute_utc,
+            settings.schedule_kr_collect_hour_utc, settings.schedule_kr_collect_minute_utc,
+            settings.schedule_kr_notify_hour_utc, settings.schedule_kr_notify_minute_utc,
+        )
+    )

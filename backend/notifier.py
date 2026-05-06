@@ -135,7 +135,7 @@ def _build_telegram_message(report: Report, stocks: list[Stock], market: str = "
     return "\n".join(lines)
 
 
-def _build_email_html(report: Report, stocks: list[Stock]) -> str:
+def _build_email_html(report: Report, stocks: list[Stock], market: str = "us") -> str:
     m = report.market_summary
     emoji = RISK_EMOJI.get(report.risk_level, "🟡")
 
