@@ -171,7 +171,7 @@ def _build_email_html(report: Report, stocks: list[Stock], market: str = "us") -
 async def _send_telegram(chat_id: str, text: str) -> None:
     url = f"https://api.telegram.org/bot{settings.telegram_bot_token}/sendMessage"
     async with httpx.AsyncClient(timeout=10) as client:
-        resp = await client.post(url, json={"chat_id": chat_id, "text": text, "parse_mode": "HTML"})
+        resp = await client.post(url, json={"chat_id": chat_id, "text": text})
         resp.raise_for_status()
 
 
