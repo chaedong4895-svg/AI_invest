@@ -130,7 +130,7 @@ def _build_telegram_message(report: Report, stocks: list[Stock], market: str = "
         lines.append(f"\n⚠️ {report.risk_warning}")
 
     market_param = "kr" if is_kr else "us"
-    lines.append(f"\n🔗 전체 리포트: {settings.frontend_url}?market={market_param}")
+    lines.append(f"\n🔗 전체 리포트: {settings.frontend_url}/report/{report.date}?market={market_param}")
     lines.append("\n※ 본 리포트는 투자 참고용입니다. 투자 책임은 본인에게 있습니다.")
     return "\n".join(lines)
 
